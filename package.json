@@ -1,5 +1,10 @@
 {
   "name": "Electron Minesweeper",
   "version": "0.1.0",
-  "main": "main.js"
+  "main": "main.js",
+  "dependencies": {
+    "react": "^15.5.4",
+    "react-redux": "^5.0.5",
+    "redux": "^3.6.0"
+  }
 }
