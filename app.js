@@ -1,5 +1,12 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-import MinesweeperComponent from './Minesweeper/Components/MinesweeperComponent.jsx';
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+import MinesweeperContainer from './game/components/MinesweeperContainer.jsx';
+import gameReducer from './game/reducer.js'
 
-ReactDOM.render(<MinesweeperComponent />, document.getElementById('app'))
+let store = createStore(gameReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
+
+ReactDOM.render(<Provider store={store}>
+                  <MinesweeperContainer />
+                </Provider>, document.getElementById('app'))

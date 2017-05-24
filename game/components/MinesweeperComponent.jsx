@@ -1,8 +1,10 @@
-var React = require('react');
+import React, { PropTypes } from 'react';
 
-export default class MinesweeperComponent extends React.Component {
-  render() {
-    return (
+const MinesweeperComponent = ({ onClick, message }) => {
+  return (
+    <div>
+      <h1>{ message }</h1>
+      <button onClick={onClick}>Click</button>
       <div id="wrapper">
         <table>
           <tbody>
@@ -24,6 +26,13 @@ export default class MinesweeperComponent extends React.Component {
           </tbody>
         </table>
       </div>
-    );
-  }
+    </div>
+  )
 }
+
+MinesweeperComponent.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  message: PropTypes.string.isRequired
+}
+
+export default MinesweeperComponent
