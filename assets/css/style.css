@@ -1,0 +1,14 @@
+table {
+  width: 100%; }
+
+td {
+  width: 33.33333%;
+  position: relative; }
+
+td:after {
+  content: '';
+  display: block;
+  margin-top: 100%; }
+
+#wrapper {
+  width: 10%; }
