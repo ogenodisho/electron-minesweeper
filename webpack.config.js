@@ -5,18 +5,20 @@ var INDEX_DIR = path.resolve(__dirname);
 
 module.exports = {
   entry: INDEX_DIR + '/app.js',
-  output: { path: INDEX_DIR, filename: 'bundle.js' },
+  output: {
+    path: INDEX_DIR,
+    filename: 'bundle.js'
+  },
   module: {
-    loaders: [
-      {
-        test: /.jsx?$/,
-        loader: 'babel-loader',
-        include: INDEX_DIR,
-        exclude: /node_modules/,
-        query: {
-          presets: ['es2015', 'react']
-        }
+    loaders: [{
+      test: /.jsx?$/,
+      loader: 'babel-loader',
+      include: INDEX_DIR,
+      exclude: /node_modules/,
+      query: {
+        presets: ['es2015', 'react'],
+        plugins: ["transform-object-rest-spread"] // to enable es6 spread operator
       }
-    ]
+    }]
   }
 };

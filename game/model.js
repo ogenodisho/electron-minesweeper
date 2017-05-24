@@ -1,5 +1,8 @@
-export type Game = {
-  name: string;
+const Square = {
+  isRevealed: false,
+  isFlagged: false,
+  isMine: null,
+  mineProximityNumber: null
 };
 
-export type State = Game[];
+export default Square;
