@@ -17,15 +17,19 @@ function rand(min, max) {
 
 function getSurroundingCoords(location, numberOfRows, numberOfCols) {
   var surroundingCoords = []
-  var rowNumber = parseInt(location[0]);
-  var colNumber = parseInt(location[1]);
+  var originRowNumber = parseInt(location[0]);
+  var originColNumber = parseInt(location[1]);
   for (var i = -1; i <= 1; i++) {
     for (var j = -1; j <= 1; j++) {
       if (i === 0 && j === 0) {
         continue
       }
-      if ((rowNumber + i) > 0 && (colNumber + j) > 0 && (rowNumber + i) < numberOfRows && (colNumber + j) < numberOfCols) {
-        surroundingCoords.push((rowNumber + i) + "" + (colNumber + j))
+      var currRowNumber = originRowNumber + i;
+      var currColNumber = originColNumber + j;
+      if (currRowNumber >= 0 && currRowNumber < numberOfRows) {
+        if (currColNumber >= 0 && currColNumber < numberOfCols) {
+          surroundingCoords.push(currRowNumber + "" + currColNumber)
+        }
       }
     }
   }

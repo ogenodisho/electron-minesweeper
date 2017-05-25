@@ -2,23 +2,26 @@ import { connect } from 'react-redux'
 import {revealSquare , flagSquare} from '../actions.js'
 import MinesweeperComponent from './MinesweeperComponent.jsx'
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   return {
-    //message: state.helloWorld.message
+    boardState: state.state
   }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    onClick: () => {
+    onLeftClick: () => {
       dispatch(revealSquare())
+    },
+    onRightClick: () => {
+      dispatch(flagSquare())
     }
   }
 }
 
-const MinesweeperRedux = connect(
+const MinesweeperContainer = connect(
   mapStateToProps,
   mapDispatchToProps
 )(MinesweeperComponent)
 
-export default MinesweeperRedux;
+export default MinesweeperContainer;

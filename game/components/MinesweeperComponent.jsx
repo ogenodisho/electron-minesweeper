@@ -1,28 +1,31 @@
 import React, { PropTypes } from 'react';
 
-const MinesweeperComponent = ({ onClick, message }) => {
+const MinesweeperComponent = ({ onLeftClick, onRightClick, boardState }) => {
+  var table = [];
+  var currRow = []
+  for (var i = 0; i < 8; i++) {
+    for (var j = 0; j < 8; j++) {
+      var coord = i + "" + j;
+      var mineProximityNumber = boardState[coord].mineProximityNumber;
+      if (boardState[coord].isMine) {
+        currRow.push(<td className="fa fa-bomb" key={coord}></td>);
+      } else if (boardState[coord].isFlagged) {
+        currRow.push(<td className="fa fa-flag" key={coord}></td>);
+      } else {
+        currRow.push(<td key={coord}>{mineProximityNumber}</td>);
+      }
+    }
+    table.push(<tr>{currRow}</tr>);
+    currRow = []
+  }
   return (
     <div>
-      <h1>{ message }</h1>
-      <button onClick={onClick}>Click</button>
+      <button onClick={onLeftClick}>Left Click</button>
+      <button onClick={onRightClick}>Right Click</button>
       <div id="wrapper">
         <table>
           <tbody>
-            <tr>
-              <td className="fa fa-bomb"></td>
-              <td>1</td>
-              <td>1</td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>2</td>
-              <td className="fa fa-flag"></td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td>1</td>
-            </tr>
+            {table}
           </tbody>
         </table>
       </div>
@@ -32,7 +35,7 @@ const MinesweeperComponent = ({ onClick, message }) => {
 
 MinesweeperComponent.propTypes = {
   onClick: PropTypes.func.isRequired,
-  message: PropTypes.string.isRequired
+  message: PropTypes.object.isRequired
 }
 
 export default MinesweeperComponent
