@@ -1,12 +1,69 @@
 import * as t from './actionTypes';
-import Square from './model.js';
+import Square from './models/square.js';
+import Board from './models/board.js';
 
-const initialState: State = [{
-  text: 'Use Redux',
-  completed: false,
-  id: 0,
-  s: Square
-}];
+const initialState = {
+  board: Board.beginner,
+  state: {}
+};
+
+// INIT STATE HERE
+/**
+ * Returns a random number between min (inclusive) and max (exclusive)
+ */
+function rand(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min
+}
+
+function getSurroundingCoords(location, numberOfRows, numberOfCols) {
+  var surroundingCoords = []
+  var rowNumber = parseInt(location[0]);
+  var colNumber = parseInt(location[1]);
+  for (var i = -1; i <= 1; i++) {
+    for (var j = -1; j <= 1; j++) {
+      if (i === 0 && j === 0) {
+        continue
+      }
+      if ((rowNumber + i) > 0 && (colNumber + j) > 0 && (rowNumber + i) < numberOfRows && (colNumber + j) < numberOfCols) {
+        surroundingCoords.push((rowNumber + i) + "" + (colNumber + j))
+      }
+    }
+  }
+  return surroundingCoords;
+}
+
+function initState(board) {
+  // generate mine locations
+  const mineLocations = [];
+  var minesPlaced = 0;
+  while (minesPlaced < board.numberOfMines) {
+    var randomMineLocation = rand(0, board.numberOfRows) + "" + rand(0, board.numberOfCols);
+    if (mineLocations.indexOf(randomMineLocation) >= 0) {
+      continue // mine location already exists
+    } else {
+      mineLocations.push(randomMineLocation)
+      minesPlaced++;
+    }
+  }
+
+  // init the squares
+  for (var i = 0; i < board.numberOfRows; i++) {
+    for (var j = 0; j < board.numberOfCols; j++) {
+      initialState.state[i + "" + j] = Object.assign({}, Square);
+    }
+  }
+
+  // place mines and increment proximity numbers
+  mineLocations.forEach(function(mineLocation) {
+    // increment surrounding proximity numbers
+    initialState.state[mineLocation].isMine = true;
+    getSurroundingCoords(mineLocation, board.numberOfRows, board.numberOfCols).forEach(function(coord) {
+      initialState.state[coord].mineProximityNumber++;
+    });
+  });
+}
+
+initState(initialState.board)
 
 const reducer = (state = initialState, action: any) => {
   switch (action.type) {

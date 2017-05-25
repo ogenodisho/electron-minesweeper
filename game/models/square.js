@@ -1,8 +1,8 @@
 const Square = {
   isRevealed: false,
   isFlagged: false,
-  isMine: null,
-  mineProximityNumber: null
+  isMine: false,
+  mineProximityNumber: 0
 };
 
 export default Square;
