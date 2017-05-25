@@ -1,10 +1,11 @@
 import * as t from './actionTypes';
 import Square from './models/square.js';
 import Board from './models/board.js';
+import update from 'immutability-helper';
 
 const initialState = {
   board: Board.beginner,
-  state: {}
+  minefield: {}
 };
 
 // INIT STATE HERE
@@ -36,6 +37,16 @@ function getSurroundingCoords(location, numberOfRows, numberOfCols) {
   return surroundingCoords;
 }
 
+// TODO do this method
+function recursivelySweepSquares(state, location, numberOfRows, numberOfCols) {
+  getSurroundingCoords(location, numberOfRows, numberOfCols).forEach(function (coord) {
+    if (state.minefield[coord].mineProximityNumber > 0) {
+      return;
+    }
+    recursivelySweepSquares(state, coord, numberOfRows, numberOfCols);
+  });
+}
+
 function initState(board) {
   // generate mine locations
   const mineLocations = [];
@@ -53,16 +64,16 @@ function initState(board) {
   // init the squares
   for (var i = 0; i < board.numberOfRows; i++) {
     for (var j = 0; j < board.numberOfCols; j++) {
-      initialState.state[i + "" + j] = Object.assign({}, Square);
+      initialState.minefield[i + "" + j] = Object.assign({}, Square);
     }
   }
 
   // place mines and increment proximity numbers
   mineLocations.forEach(function(mineLocation) {
     // increment surrounding proximity numbers
-    initialState.state[mineLocation].isMine = true;
+    initialState.minefield[mineLocation].isMine = true;
     getSurroundingCoords(mineLocation, board.numberOfRows, board.numberOfCols).forEach(function(coord) {
-      initialState.state[coord].mineProximityNumber++;
+      initialState.minefield[coord].mineProximityNumber++;
     });
   });
 }
@@ -71,14 +82,14 @@ initState(initialState.board)
 
 const reducer = (state = initialState, action: any) => {
   switch (action.type) {
-    case t.REVEAL_SQUARE:
-      return {
-        ...state
-      };
-    case t.FLAG_SQUARE:
-      return {
-        ...state
-      };
+    case t.SWEEP_SQUARE:
+      if (state.minefield[action.coord].isMine) {
+        console.log("GAME OVER! YOU SWEEPED A MINE!");
+      }
+      // ES6 computed property names!!
+      return update(state, {minefield: {[action.coord]: {isSweeped: {$set: true}, isFlagged: {$set: false}}}});
+    case t.TOGGLE_SQUARE_FLAG:
+      return update(state, {minefield: {[action.coord]: {isFlagged: {$apply: (isFlagged) => { return !isFlagged; }}}}});
     default:
       return state;
   }

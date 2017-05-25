@@ -5,7 +5,7 @@ const fs = require('fs');
 const sass = require('node-sass');
 var result = sass.renderSync({file: './assets/scss/style.scss'});
 fs.writeFile('./assets/css/style.css', result.css, function(err) {
-  if(!err){
+  if (!err) {
     console.log("scss file compiled and written to disk")
   }
 });

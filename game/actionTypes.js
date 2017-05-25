@@ -1,2 +1,2 @@
-export const REVEAL_SQUARE = 'game/REVEAL_SQUARE';
-export const FLAG_SQUARE = 'game/FLAG_SQUARE';
+export const SWEEP_SQUARE = 'game/SWEEP_SQUARE';
+export const TOGGLE_SQUARE_FLAG = 'game/TOGGLE_SQUARE_FLAG';

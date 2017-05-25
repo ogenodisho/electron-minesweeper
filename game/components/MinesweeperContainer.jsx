@@ -1,20 +1,24 @@
 import { connect } from 'react-redux'
-import {revealSquare , flagSquare} from '../actions.js'
+import {sweepSquare , toggleSquareFlag} from '../actions.js'
 import MinesweeperComponent from './MinesweeperComponent.jsx'
 
 const mapStateToProps = (state) => {
   return {
-    boardState: state.state
+    minefield: state.minefield
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onLeftClick: () => {
-      dispatch(revealSquare())
-    },
-    onRightClick: () => {
-      dispatch(flagSquare())
+    handleClick: function(e, coord) {
+      e.preventDefault();
+      if (e.nativeEvent.which === 1) {
+        dispatch(sweepSquare(coord));
+      } else if (e.nativeEvent.which === 3) {
+        dispatch(toggleSquareFlag(coord));
+      } else {
+        console.log("Unknown click");
+      }
     }
   }
 }

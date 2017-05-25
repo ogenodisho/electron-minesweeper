@@ -1,13 +1,15 @@
 import * as t from './actionTypes';
 
-export function revealSquare() {
+export function sweepSquare(coord) {
   return {
-    type: t.REVEAL_SQUARE
+    type: t.SWEEP_SQUARE,
+    coord: coord
   }
 }
 
-export function flagSquare() {
+export function toggleSquareFlag(coord) {
   return {
-    type: t.FLAG_SQUARE
+    type: t.TOGGLE_SQUARE_FLAG,
+    coord: coord
   }
 }

@@ -1,5 +1,5 @@
 const Square = {
-  isRevealed: false,
+  isSweeped: false,
   isFlagged: false,
   isMine: false,
   mineProximityNumber: 0

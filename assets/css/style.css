@@ -3,12 +3,12 @@ table {
 
 td {
   width: 12.5%;
+  min-width: 30px;
   position: relative; }
 
 td:after {
   content: '';
-  display: block;
-  margin-top: 100%; }
+  display: block; }
 
 td.fa {
   display: table-cell; }

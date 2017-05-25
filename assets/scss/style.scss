@@ -6,13 +6,13 @@ table {
 
 td {
     width: $table-width / 8;
+    min-width: 30px;
     position: relative;
 }
 
 td:after {
     content: '';
     display: block;
-    margin-top: 100%;
 }
 
 td.fa {
