@@ -4,8 +4,9 @@ import MinesweeperComponent from './MinesweeperComponent.jsx'
 
 const mapStateToProps = (state) => {
   return {
-    minefield: state.minefield,
-    board: state.board
+    mineField: state.game.mineField,
+    board: state.game.board,
+    isGameOver: state.game.isGameOver
   }
 }
 

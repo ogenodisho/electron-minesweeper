@@ -1,3 +1,6 @@
+// TODO every board should have a function to init itself randomly
+// then in the menu container when the difficulty changes, you cahnge the board
+
 const Board = {
   beginner: {
     numberOfRows: 8,
