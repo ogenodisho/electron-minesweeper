@@ -15,7 +15,7 @@ const MinesweeperComponent = ({ handleClick, minefield }) => {
       } else if (!minefield[coord].isSweeped) {
         currRow.push(<td><button key={coord} onClick={(e) => handleClick(e, coord)} onContextMenu={(e) => handleClick(e, coord)}></button></td>);
       } else if (minefield[coord].isMine) { // TODO take this out
-        currRow.push(<td><button key={coord} className="fa fa-bomb" onClick={(e) => handleClick(e, coord)} onContextMenu={(e) => handleClick(e, coord)}></button></td>);
+        currRow.push(<td className="fa fa-bomb" key={coord}></td>);
       } else {
         if (mineProximityNumber === 0) {
           currRow.push(<td key={coord}>0</td>);
