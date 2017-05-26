@@ -1,14 +1,14 @@
 import React, { PropTypes } from 'react';
 
-const MinesweeperComponent = ({ handleClick, minefield }) => {
+const MinesweeperComponent = ({ handleClick, minefield, board }) => {
   var table = [];
   var currRow = [];
-  for (var i = 0; i < 8; i++) {
-    for (var j = 0; j < 8; j++) {
+  for (var i = 0; i < board.numberOfRows; i++) {
+    for (var j = 0; j < board.numberOfCols; j++) {
       // Using 'let' solves the common problem of
       // having closures (handleClick) in for loops
       // using the latest values of the 'var' variable
-      let coord = i + "" + j;
+      let coord = i + "_" + j;
       var mineProximityNumber = minefield[coord].mineProximityNumber;
       if (minefield[coord].isFlagged) {
         currRow.push(<td><button key={coord} className="fa fa-flag" onClick={(e) => handleClick(e, coord)} onContextMenu={(e) => handleClick(e, coord)}></button></td>);

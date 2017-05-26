@@ -19,8 +19,8 @@ function rand(min, max) {
 
 function getSurroundingCoords(location, numberOfRows, numberOfCols, level) {
   var surroundingCoords = []
-  var originRowNumber = parseInt(location[0]);
-  var originColNumber = parseInt(location[1]);
+  // var unpacking - more es6 magic!
+  var [originRowNumber, originColNumber] = location.split("_").map((i) => parseInt(i));
   for (var i = -1; i <= 1; i++) {
     for (var j = -1; j <= 1; j++) {
       if (i === 0 && j === 0) {
@@ -30,7 +30,7 @@ function getSurroundingCoords(location, numberOfRows, numberOfCols, level) {
       var currColNumber = originColNumber + (j * level);
       if (currRowNumber >= 0 && currRowNumber < numberOfRows) {
         if (currColNumber >= 0 && currColNumber < numberOfCols) {
-          surroundingCoords.push(currRowNumber + "" + currColNumber)
+          surroundingCoords.push(currRowNumber + "_" + currColNumber)
         }
       }
     }
@@ -74,7 +74,7 @@ function initState(board) {
   // generate mine locations
   var minesPlaced = 0;
   while (minesPlaced < board.numberOfMines) {
-    var randomMineLocation = rand(0, board.numberOfRows) + "" + rand(0, board.numberOfCols);
+    var randomMineLocation = rand(0, board.numberOfRows) + "_" + rand(0, board.numberOfCols);
     if (mineLocations.indexOf(randomMineLocation) >= 0) {
       continue // mine location already exists
     } else {
@@ -86,7 +86,7 @@ function initState(board) {
   // init the squares
   for (var i = 0; i < board.numberOfRows; i++) {
     for (var j = 0; j < board.numberOfCols; j++) {
-      initialState.minefield[i + "" + j] = Object.assign({}, Square);
+      initialState.minefield[i + "_" + j] = Object.assign({}, Square);
     }
   }
 

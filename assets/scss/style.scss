@@ -5,7 +5,7 @@ table {
 }
 
 td {
-    width: $table-width / 8;
+    width: $table-width / 8; // TODO number of rows
     min-width: 30px;
     position: relative;
 }
