@@ -6,3 +6,10 @@ export function changeDifficulty(difficulty) {
     difficulty: difficulty
   }
 }
+
+export function restart(difficulty) {
+  return {
+    type: t.RESTART,
+    difficulty: difficulty
+  }
+}

@@ -1,22 +1,27 @@
 import React, { PropTypes } from 'react';
 
-const MenuComponent = ({ handleClick, difficulty }) => {
-  // TODO use difficulty to set the selected radio button
+const MenuComponent = ({ handleDifficultyChanged, handleRestart, difficulty }) => {
+  let isBeginner = difficulty === "beginner";
+  let isIntermediate = difficulty === "intermediate";
+  let isExpert = difficulty === "expert";
+
   return (
-    <div id="difficulty">
+    <div id="menu">
+      <button onClick={(e) => handleRestart(e, difficulty)}>Restart</button>
       <span>Beginner</span>
-      <input type='radio' name='difficulty' value='beginner' onClick={(e) => handleClick(e, "beginner")} checked/><br/>
+      <input type='radio' name='difficulty' value='beginner' onClick={(e) => handleDifficultyChanged(e, "beginner")} checked={isBeginner}/>
       <span>Intermediate</span>
-      <input type='radio' name='difficulty' value='intermediate' onClick={(e) => handleClick(e, "intermediate")}/><br/>
+      <input type='radio' name='difficulty' value='intermediate' onClick={(e) => handleDifficultyChanged(e, "intermediate")} checked={isIntermediate}/>
       <span>Expert</span>
-      <input type='radio' name='difficulty' value='expert' onClick={(e) => handleClick(e, "expert")}/>
+      <input type='radio' name='difficulty' value='expert' onClick={(e) => handleDifficultyChanged(e, "expert")} checked={isExpert}/>
     </div>
   )
 }
 
 MenuComponent.propTypes = {
   difficulty: PropTypes.string.isRequired,
-  handleClick: PropTypes.func.isRequired
+  handleDifficultyChanged: PropTypes.func.isRequired,
+  handleRestart: PropTypes.func.isRequired
 }
 
 export default MenuComponent

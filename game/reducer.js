@@ -1,10 +1,11 @@
-import * as t from './actionTypes';
+import * as gameActions from './actionTypes';
+import * as menuActions from '../menu/actionTypes';
 import update from 'immutability-helper';
 import Square from '../game/models/square.js';
 import Board from '../game/models/board.js';
 
 const initialState = {
-  board: Board.beginner,
+  board: Board["beginner"],
   mineField: {},
   isGameOver: false
 };
@@ -67,7 +68,10 @@ function rand(min, max) {
   return Math.floor(Math.random() * (max - min)) + min
 }
 
-function initState(board) {
+function generateMineFieldForBoard(board) {
+  let mineField = {}
+  mineLocations.length = 0 // clear the const
+
   // generate mine locations
   var minesPlaced = 0;
   while (minesPlaced < board.numberOfMines) {
@@ -83,28 +87,48 @@ function initState(board) {
   // init the squares
   for (var i = 0; i < board.numberOfRows; i++) {
     for (var j = 0; j < board.numberOfCols; j++) {
-      initialState.mineField[i + "_" + j] = Object.assign({}, Square);
+      mineField[i + "_" + j] = Object.assign({}, Square);
     }
   }
 
   // place mines and increment proximity numbers
   mineLocations.forEach(function(mineLocation) {
     // increment surrounding proximity numbers
-    initialState.mineField[mineLocation].isMine = true;
+    mineField[mineLocation].isMine = true;
     getSurroundingCoords(mineLocation, board.numberOfRows, board.numberOfCols).forEach(function(coord) {
-      initialState.mineField[coord].mineProximityNumber++;
+      mineField[coord].mineProximityNumber++;
     });
   });
+
+  return mineField;
 }
 
-initState(initialState.board);
+initialState.mineField = generateMineFieldForBoard(initialState.board);
 
 const reducer = (state = initialState, action: any) => {
+  if (action.type === menuActions.RESTART) {
+    //initialState.board = Board[action.difficulty]
+    //initialState.isGameOver = false;
+    //initialState.mineField = generateMineFieldForBoard(initialState.board);
+    //state = initialState;
+    //return state;
+    return update(state, {
+      board: {
+        $set: Board[action.difficulty]
+      },
+      isGameOver: {
+        $set: false
+      },
+      mineField: {
+        $set: generateMineFieldForBoard(Board[action.difficulty])
+      }
+    });
+  }
   if (state.isGameOver) {
     return state;
   }
   switch (action.type) {
-    case t.SWEEP_SQUARE:
+    case gameActions.SWEEP_SQUARE:
       if (state.mineField[action.coord].isMine) {
         state = update(state, {
           isGameOver: {
@@ -128,7 +152,7 @@ const reducer = (state = initialState, action: any) => {
         return state
       }
       return recursivelySweepSquares(state, action.coord, []);
-    case t.TOGGLE_SQUARE_FLAG:
+    case gameActions.TOGGLE_SQUARE_FLAG:
       return update(state, {
         mineField: {
           [action.coord]: {

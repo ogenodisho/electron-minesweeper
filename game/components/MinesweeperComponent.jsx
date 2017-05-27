@@ -27,6 +27,25 @@ const MinesweeperComponent = ({ handleClick, mineField, board, isGameOver }) => 
     table.push(<tr>{currRow}</tr>);
     currRow = []
   }
+
+  // TODO this computation should be in the reducer
+  var numberOfFlaggedMines = 0;
+  var numberOfSweepedSquares = 0;
+  Object.keys(mineField).forEach(function (key) {
+    if (mineField[key].isFlagged && numberOfFlaggedMines < board.numberOfMines) {
+      numberOfFlaggedMines++;
+    }
+    if (mineField[key].isSweeped) {
+      numberOfSweepedSquares++;
+    }
+  });
+
+  if (numberOfSweepedSquares === (board.numberOfRows * board.numberOfCols) - board.numberOfMines) {
+    var statusMessage = "Congratulations! You win!";
+  } else {
+    var statusMessage = "Mines left: " + (board.numberOfMines - numberOfFlaggedMines);
+  }
+
   return (
     <div id="wrapper">
       <table>
@@ -34,6 +53,7 @@ const MinesweeperComponent = ({ handleClick, mineField, board, isGameOver }) => 
           {table}
         </tbody>
       </table>
+      <span>{statusMessage}</span>
     </div>
   )
 }
