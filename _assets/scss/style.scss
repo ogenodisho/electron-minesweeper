@@ -8,6 +8,15 @@ td {
     width: $table-width / 8; // TODO number of rows
     min-width: 30px;
     position: relative;
+
+    button {
+      width: 100%;
+      height: 100%;
+    }
+
+    button.sweeped {
+      box-shadow: inset 0px 0px 10px rgba(0,0,0,0.7);
+    }
 }
 
 td:after {

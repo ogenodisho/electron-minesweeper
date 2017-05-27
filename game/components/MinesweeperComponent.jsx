@@ -11,16 +11,16 @@ const MinesweeperComponent = ({ handleClick, mineField, board, isGameOver }) => 
       let coord = i + "_" + j;
       var mineProximityNumber = mineField[coord].mineProximityNumber;
       if (mineField[coord].isFlagged) {
-        currRow.push(<td><button key={coord} className="fa fa-flag" onClick={(e) => handleClick(e, coord)} onContextMenu={(e) => handleClick(e, coord)}></button></td>);
+        currRow.push(<td key={coord}><button className="fa fa-flag" onClick={(e) => handleClick(e, coord)} onContextMenu={(e) => handleClick(e, coord)} defaultChecked></button></td>);
       } else if (!mineField[coord].isSweeped) {
-        currRow.push(<td><button key={coord} onClick={(e) => handleClick(e, coord)} onContextMenu={(e) => handleClick(e, coord)}></button></td>);
+        currRow.push(<td key={coord}><button onClick={(e) => handleClick(e, coord)} onContextMenu={(e) => handleClick(e, coord)}>&zwnj;</button></td>);
       } else if (mineField[coord].isMine) { // TODO take this out
-        currRow.push(<td className="fa fa-bomb" key={coord}></td>);
+        currRow.push(<td key={coord}><button className="fa fa-bomb"/></td>);
       } else {
         if (mineProximityNumber === 0) {
-          currRow.push(<td key={coord}>0</td>);
+          currRow.push(<td key={coord}><button className="sweeped">&zwnj;</button></td>);
         } else {
-          currRow.push(<td key={coord}>{mineProximityNumber}</td>);
+          currRow.push(<td key={coord}><button className="sweeped">{mineProximityNumber}</button></td>);
         }
       }
     }
@@ -40,7 +40,9 @@ const MinesweeperComponent = ({ handleClick, mineField, board, isGameOver }) => 
     }
   });
 
-  if (numberOfSweepedSquares === (board.numberOfRows * board.numberOfCols) - board.numberOfMines) {
+  if (isGameOver) {
+    var statusMessage = "Game over! You hit a mine!";
+  } else if (numberOfSweepedSquares === (board.numberOfRows * board.numberOfCols) - board.numberOfMines) {
     var statusMessage = "Congratulations! You win!";
   } else {
     var statusMessage = "Mines left: " + (board.numberOfMines - numberOfFlaggedMines);
