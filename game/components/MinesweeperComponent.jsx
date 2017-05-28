@@ -1,70 +1,67 @@
 import React, { PropTypes } from 'react';
 
-const MinesweeperComponent = ({ handleClick, mineField, board, isGameOver }) => {
-  var table = [];
-  var currRow = [];
-  for (var i = 0; i < board.numberOfRows; i++) {
-    for (var j = 0; j < board.numberOfCols; j++) {
-      // Using 'let' solves the common problem of
-      // having closures (handleClick) in for loops
-      // using the latest values of the 'var' variable
-      let coord = i + "_" + j;
-      var mineProximityNumber = mineField[coord].mineProximityNumber;
-      if (mineField[coord].isFlagged) {
-        currRow.push(<td key={coord}><button className="fa fa-flag" onClick={(e) => handleClick(e, coord)} onContextMenu={(e) => handleClick(e, coord)} defaultChecked></button></td>);
-      } else if (!mineField[coord].isSweeped) {
-        currRow.push(<td key={coord}><button onClick={(e) => handleClick(e, coord)} onContextMenu={(e) => handleClick(e, coord)}>&zwnj;</button></td>);
-      } else if (mineField[coord].isMine) { // TODO take this out
-        currRow.push(<td key={coord}><button className="fa fa-bomb"/></td>);
-      } else {
-        if (mineProximityNumber === 0) {
-          currRow.push(<td key={coord}><button className="sweeped">&zwnj;</button></td>);
+class MinesweeperComponent extends React.Component {
+  constructor(props) {
+    super(props)
+    this.handleClick = this.handleClick.bind(this)
+  }
+
+  handleClick(e, coord) {
+    e.preventDefault()
+    if (e.nativeEvent.which === 1) { // left click
+      this.props.sweepSquare(coord);
+    } else if (e.nativeEvent.which === 3) {
+      this.props.toggleSquareFlag(coord) // right click
+    } else {
+      console.log("Unknown click");
+    }
+  }
+
+  render() {
+    // determine the table
+    var table = [];
+    var currRow = [];
+    for (var i = 0; i < this.props.game.board.numberOfRows; i++) {
+      for (var j = 0; j < this.props.game.board.numberOfCols; j++) {
+        // Using 'let' solves the common problem of
+        // having closures (handleClick) in for loops
+        // using the latest values of the 'var' variable
+        let coord = i + "_" + j;
+        var mineProximityNumber = this.props.game.mineField[coord].mineProximityNumber;
+        if (this.props.game.mineField[coord].isFlagged) {
+          currRow.push(<td key={coord}><button className="fa fa-flag" onClick={(e) => this.handleClick(e, coord)} onContextMenu={(e) => this.handleClick(e, coord)} defaultChecked></button></td>);
+        } else if (this.props.game.mineField[coord].isSweeped === false) {
+          currRow.push(<td key={coord}><button onClick={(e) => this.handleClick(e, coord)} onContextMenu={(e) => this.handleClick(e, coord)}>&zwnj;</button></td>);
+        } else if (this.props.game.mineField[coord].isMine) { // TODO take this out
+          currRow.push(<td key={coord}><button className="fa fa-bomb"/></td>);
         } else {
-          currRow.push(<td key={coord}><button className="sweeped">{mineProximityNumber}</button></td>);
+          if (mineProximityNumber === 0) {
+            currRow.push(<td key={coord}><button className="sweeped">&zwnj;</button></td>);
+          } else {
+            currRow.push(<td key={coord}><button className="sweeped">{mineProximityNumber}</button></td>);
+          }
         }
       }
+      table.push(<tr key={i}>{currRow}</tr>);
+      currRow = []
     }
-    table.push(<tr>{currRow}</tr>);
-    currRow = []
+
+    return (
+      <div id="wrapper">
+        <table>
+          <tbody>
+            {table}
+          </tbody>
+        </table>
+        <span>{this.props.statusMessage}</span>
+      </div>
+    )
   }
-
-  // TODO this computation should be in the reducer
-  var numberOfFlaggedMines = 0;
-  var numberOfSweepedSquares = 0;
-  Object.keys(mineField).forEach(function (key) {
-    if (mineField[key].isFlagged && numberOfFlaggedMines < board.numberOfMines) {
-      numberOfFlaggedMines++;
-    }
-    if (mineField[key].isSweeped) {
-      numberOfSweepedSquares++;
-    }
-  });
-
-  if (isGameOver) {
-    var statusMessage = "Game over! You hit a mine!";
-  } else if (numberOfSweepedSquares === (board.numberOfRows * board.numberOfCols) - board.numberOfMines) {
-    var statusMessage = "Congratulations! You win!";
-  } else {
-    var statusMessage = "Mines left: " + (board.numberOfMines - numberOfFlaggedMines);
-  }
-
-  return (
-    <div id="wrapper">
-      <table>
-        <tbody>
-          {table}
-        </tbody>
-      </table>
-      <span>{statusMessage}</span>
-    </div>
-  )
 }
 
 MinesweeperComponent.propTypes = {
-  mineField: PropTypes.object.isRequired,
-  board: PropTypes.object.isRequired,
-  isGameOver: PropTypes.bool.isRequired,
-  handleClick: PropTypes.func.isRequired
+  game: PropTypes.func.isRequired,
+  statusMessage: PropTypes.string.isRequired
 }
 
 export default MinesweeperComponent

@@ -1,28 +1,38 @@
+import React from 'react'
+import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import {sweepSquare , toggleSquareFlag} from '../actions.js'
+import {sweepSquare , toggleSquareFlag} from '../actionCreators.js'
 import MinesweeperComponent from './MinesweeperComponent.jsx'
 
 const mapStateToProps = (state) => {
+  // determine the current status of the game
+  var numberOfFlaggedMines = 0;
+  var numberOfSweepedSquares = 0;
+  Object.keys(state.game.mineField).forEach(function (key) {
+    if (state.game.mineField[key].isFlagged && numberOfFlaggedMines < state.game.board.numberOfMines) {
+      numberOfFlaggedMines++;
+    }
+    if (state.game.mineField[key].isSweeped) {
+      numberOfSweepedSquares++;
+    }
+  });
+
+  if (state.game.isGameOver) {
+    var statusMessage = "Game over! You hit a mine!";
+  } else if (numberOfSweepedSquares === (state.game.board.numberOfRows * state.game.board.numberOfCols) - state.game.board.numberOfMines) {
+    var statusMessage = "Congratulations! You win!";
+  } else {
+    var statusMessage = "Mines left: " + (state.game.board.numberOfMines - numberOfFlaggedMines);
+  }
+
   return {
-    mineField: state.game.mineField,
-    board: state.game.board,
-    isGameOver: state.game.isGameOver
+    game: state.game,
+    statusMessage: statusMessage
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-    handleClick: function(e, coord) {
-      e.preventDefault();
-      if (e.nativeEvent.which === 1) {
-        dispatch(sweepSquare(coord));
-      } else if (e.nativeEvent.which === 3) {
-        dispatch(toggleSquareFlag(coord));
-      } else {
-        console.log("Unknown click");
-      }
-    }
-  }
+  return bindActionCreators({ sweepSquare, toggleSquareFlag }, dispatch);
 }
 
 const MinesweeperContainer = connect(

@@ -1,5 +1,6 @@
 import { connect } from 'react-redux'
-import { changeDifficulty, restart } from '../actions.js'
+import { bindActionCreators } from 'redux'
+import { restart, changeDifficulty } from '../actionCreators.js'
 import MenuComponent from './MenuComponent.jsx'
 
 const mapStateToProps = (state) => {
@@ -9,14 +10,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-    handleDifficultyChanged: function(e, difficulty) {
-      dispatch(changeDifficulty(difficulty));
-    },
-    handleRestart: function(e, difficulty) {
-      dispatch(restart(difficulty));
-    }
-  }
+  return bindActionCreators({ restart, changeDifficulty }, dispatch);
 }
 
 const MenuContainer = connect(

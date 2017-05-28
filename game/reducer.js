@@ -107,11 +107,6 @@ initialState.mineField = generateMineFieldForBoard(initialState.board);
 
 const reducer = (state = initialState, action: any) => {
   if (action.type === menuActions.RESTART) {
-    //initialState.board = Board[action.difficulty]
-    //initialState.isGameOver = false;
-    //initialState.mineField = generateMineFieldForBoard(initialState.board);
-    //state = initialState;
-    //return state;
     return update(state, {
       board: {
         $set: Board[action.difficulty]

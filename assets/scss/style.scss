@@ -2,11 +2,14 @@ $table-width: 100%;
 
 table {
     width: $table-width;
+    border-collapse: collapse;
+    border-spacing: 0px;
 }
 
 td {
     width: $table-width / 8; // TODO number of rows
     min-width: 30px;
+    padding: 0px;
     position: relative;
 
     button {

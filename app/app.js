@@ -6,7 +6,7 @@ import AppComponent from './components/AppComponent.jsx';
 import gameReducer from '../game/reducer.js';
 import menuReducer from '../menu/reducer.js';
 
-require("!style-loader!css-loader!sass-loader!../_assets/scss/style.scss");
+require("!style-loader!css-loader!sass-loader!../assets/scss/style.scss");
 
 const reducers = combineReducers({
   game: gameReducer,
