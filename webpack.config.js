@@ -2,7 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 
 var INDEX_DIR = path.resolve(__dirname);
-var BUILD_DIR = path.resolve(__dirname) + "/_build";
+var BUILD_DIR = path.resolve(__dirname) + "/build";
 
 module.exports = {
   entry: INDEX_DIR + '/app/app.js',

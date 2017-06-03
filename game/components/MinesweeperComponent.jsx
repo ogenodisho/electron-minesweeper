@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 class MinesweeperComponent extends React.Component {
   constructor(props) {
@@ -47,7 +48,7 @@ class MinesweeperComponent extends React.Component {
     }
 
     return (
-      <div id="wrapper">
+      <div id="wrapper" class="minesweeper-table">
         <table>
           <tbody>
             {table}
@@ -60,7 +61,7 @@ class MinesweeperComponent extends React.Component {
 }
 
 MinesweeperComponent.propTypes = {
-  game: PropTypes.func.isRequired,
+  game: PropTypes.object.isRequired,
   statusMessage: PropTypes.string.isRequired
 }
 
