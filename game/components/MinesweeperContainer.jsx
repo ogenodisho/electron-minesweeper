@@ -8,25 +8,25 @@ const mapStateToProps = (state) => {
   // determine the current status of the game
   var numberOfFlaggedMines = 0;
   var numberOfSweepedSquares = 0;
-  Object.keys(state.game.board.mineField).forEach(function (key) {
-    if (state.game.board.mineField[key].isFlagged && numberOfFlaggedMines < state.game.board.numberOfMines) {
+  Object.keys(state.game.present.board.mineField).forEach(function (key) {
+    if (state.game.present.board.mineField[key].isFlagged && numberOfFlaggedMines < state.game.present.board.numberOfMines) {
       numberOfFlaggedMines++;
     }
-    if (state.game.board.mineField[key].isSweeped) {
+    if (state.game.present.board.mineField[key].isSweeped) {
       numberOfSweepedSquares++;
     }
   });
 
-  if (state.game.isGameOver) {
+  if (state.game.present.isGameOver) {
     var statusMessage = "Game over! You hit a mine!";
-  } else if (numberOfSweepedSquares === (state.game.board.numberOfRows * state.game.board.numberOfCols) - state.game.board.numberOfMines) {
+  } else if (numberOfSweepedSquares === (state.game.present.board.numberOfRows * state.game.present.board.numberOfCols) - state.game.present.board.numberOfMines) {
     var statusMessage = "Congratulations! You win!";
   } else {
-    var statusMessage = "Mines left: " + (state.game.board.numberOfMines - numberOfFlaggedMines);
+    var statusMessage = "Mines left: " + (state.game.present.board.numberOfMines - numberOfFlaggedMines);
   }
 
   return {
-    board: state.game.board,
+    board: state.game.present.board,
     statusMessage: statusMessage
   }
 }

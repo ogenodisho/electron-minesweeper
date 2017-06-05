@@ -3,6 +3,7 @@ import * as menuActions from '../menu/actionTypes';
 import cloneDeep from 'lodash/cloneDeep';
 import Square from '../game/models/square.js';
 import { Board, BEGINNER } from '../game/models/board.js';
+import undoable, { excludeAction } from 'redux-undo'
 
 const initialState = {
   board: new Board(BEGINNER),
@@ -79,4 +80,8 @@ const reducer = (state = initialState, action: any) => {
   }
 };
 
-export default reducer;
+const undoableReducer = undoable(reducer, {
+  filter: excludeAction(menuActions.RESTART) // TODO not working
+})
+
+export default undoableReducer
