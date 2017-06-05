@@ -34,7 +34,7 @@ class MinesweeperComponent extends React.Component {
         } else if (this.props.board.mineField[coord].isSweeped === false) {
           currRow.push(<td key={coord}><button onClick={(e) => this.handleClick(e, coord)} onContextMenu={(e) => this.handleClick(e, coord)}>&zwnj;</button></td>);
         } else if (this.props.board.mineField[coord].isMine) { // TODO take this out
-          currRow.push(<td key={coord}><button className="fa fa-bomb"/></td>);
+          currRow.push(<td key={coord}><button className="fa fa-bomb sweeped"/></td>);
         } else {
           if (mineProximityNumber === 0) {
             currRow.push(<td key={coord}><button className="sweeped">&zwnj;</button></td>);
