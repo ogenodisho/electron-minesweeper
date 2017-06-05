@@ -6,6 +6,7 @@ import {
 	scryRenderedComponentsWithType
 } from 'react-dom/test-utils';
 import MinesweeperComponent from '../game/components/MinesweeperComponent.jsx'
+import { Board, BEGINNER } from '../game/models/board.js';
 import { expect } from 'chai';
 
 before(function () {
@@ -18,9 +19,9 @@ after(function () {
 
 describe('MinesweeperComponent', () => {
 	it('should render a div with "minesweeper-table" class', () => {
-    var game = {}
+    var board = new Board(BEGINNER)
 		const component = renderIntoDocument(
-			<MinesweeperComponent game={game} statusMessage=""/>
+			<MinesweeperComponent board={board} statusMessage="10 mines left"/>
 		);
 		const minesweeperComponentElement = findRenderedDOMComponentWithClass(component, 'minesweeper-table');
 

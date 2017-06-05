@@ -1,5 +1,5 @@
 import * as t from './actionTypes';
-import update from 'immutability-helper';
+import cloneDeep from 'lodash/cloneDeep'
 
 const initialState = {
   difficulty: "beginner"
@@ -8,11 +8,9 @@ const initialState = {
 const reducer = (state = initialState, action: any) => {
   switch (action.type) {
     case t.CHANGE_DIFFICULTY:
-      return update(state, {
-        difficulty: {
-          $set: action.difficulty
-        }
-      });
+      var clone = cloneDeep(state)
+      clone.difficulty = action.difficulty
+      return clone
     case t.RESTART:
       return state;
     default:

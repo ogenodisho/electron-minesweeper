@@ -8,11 +8,11 @@ const mapStateToProps = (state) => {
   // determine the current status of the game
   var numberOfFlaggedMines = 0;
   var numberOfSweepedSquares = 0;
-  Object.keys(state.game.mineField).forEach(function (key) {
-    if (state.game.mineField[key].isFlagged && numberOfFlaggedMines < state.game.board.numberOfMines) {
+  Object.keys(state.game.board.mineField).forEach(function (key) {
+    if (state.game.board.mineField[key].isFlagged && numberOfFlaggedMines < state.game.board.numberOfMines) {
       numberOfFlaggedMines++;
     }
-    if (state.game.mineField[key].isSweeped) {
+    if (state.game.board.mineField[key].isSweeped) {
       numberOfSweepedSquares++;
     }
   });
@@ -26,7 +26,7 @@ const mapStateToProps = (state) => {
   }
 
   return {
-    game: state.game,
+    board: state.game.board,
     statusMessage: statusMessage
   }
 }

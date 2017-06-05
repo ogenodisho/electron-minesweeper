@@ -1,16 +1,15 @@
 import * as gameActions from './actionTypes';
 import * as menuActions from '../menu/actionTypes';
-import update from 'immutability-helper';
+import cloneDeep from 'lodash/cloneDeep';
 import Square from '../game/models/square.js';
-import Board from '../game/models/board.js';
+import { Board, BEGINNER } from '../game/models/board.js';
 
 const initialState = {
-  board: Board["beginner"],
-  mineField: {},
+  board: new Board(BEGINNER),
   isGameOver: false
 };
-const mineLocations = [];
 
+// TODO remove from board.js
 function getSurroundingCoords(location, numberOfRows, numberOfCols) {
   var surroundingCoords = []
   // var unpacking - more es6 magic!
@@ -33,25 +32,14 @@ function getSurroundingCoords(location, numberOfRows, numberOfCols) {
 }
 
 function recursivelySweepSquares(state, location, visited) {
-  // ES6 computed property names with immutability helper!!
-  state = update(state, {
-    mineField: {
-      [location]: {
-        isSweeped: {
-          $set: true
-        },
-        isFlagged: {
-          $set: false
-        }
-      }
-    }
-  });
+  state.board.mineField[location].isSweeped = true
+  state.board.mineField[location].isFlagged = false
 
   visited.push(location);
 
-  if (state.mineField[location].mineProximityNumber === 0) {
+  if (state.board.mineField[location].mineProximityNumber === 0) {
     getSurroundingCoords(location, state.board.numberOfRows, state.board.numberOfCols).forEach(function(coord) {
-      if (state.mineField[coord].isSweeped || state.mineField[coord].isMine || visited.indexOf(coord) >= 0) {
+      if (state.board.mineField[coord].isSweeped || state.board.mineField[coord].isMine || visited.indexOf(coord) >= 0) {
         return;
       }
       state = recursivelySweepSquares(state, coord, visited);
@@ -61,104 +49,31 @@ function recursivelySweepSquares(state, location, visited) {
   return state;
 }
 
-/**
- * Returns a random number between min (inclusive) and max (exclusive)
- */
-function rand(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min
-}
-
-function generateMineFieldForBoard(board) {
-  let mineField = {}
-  mineLocations.length = 0 // clear the const
-
-  // generate mine locations
-  var minesPlaced = 0;
-  while (minesPlaced < board.numberOfMines) {
-    var randomMineLocation = rand(0, board.numberOfRows) + "_" + rand(0, board.numberOfCols);
-    if (mineLocations.indexOf(randomMineLocation) >= 0) {
-      continue // mine location already exists
-    } else {
-      mineLocations.push(randomMineLocation)
-      minesPlaced++;
-    }
-  }
-
-  // init the squares
-  for (var i = 0; i < board.numberOfRows; i++) {
-    for (var j = 0; j < board.numberOfCols; j++) {
-      mineField[i + "_" + j] = Object.assign({}, Square);
-    }
-  }
-
-  // place mines and increment proximity numbers
-  mineLocations.forEach(function(mineLocation) {
-    // increment surrounding proximity numbers
-    mineField[mineLocation].isMine = true;
-    getSurroundingCoords(mineLocation, board.numberOfRows, board.numberOfCols).forEach(function(coord) {
-      mineField[coord].mineProximityNumber++;
-    });
-  });
-
-  return mineField;
-}
-
-initialState.mineField = generateMineFieldForBoard(initialState.board);
-
 const reducer = (state = initialState, action: any) => {
+  var clone = cloneDeep(state)
+
   if (action.type === menuActions.RESTART) {
-    return update(state, {
-      board: {
-        $set: Board[action.difficulty]
-      },
-      isGameOver: {
-        $set: false
-      },
-      mineField: {
-        $set: generateMineFieldForBoard(Board[action.difficulty])
-      }
-    });
+    clone.board = new Board(action.difficulty)
+    clone.isGameOver = false;
+    return clone
   }
   if (state.isGameOver) {
     return state;
   }
   switch (action.type) {
     case gameActions.SWEEP_SQUARE:
-      if (state.mineField[action.coord].isMine) {
-        state = update(state, {
-          isGameOver: {
-            $set: true
-          }
-        });
-        mineLocations.forEach(function(mineLocation) {
-          state = update(state, {
-            mineField: {
-              [mineLocation]: {
-                isSweeped: {
-                  $set: true
-                },
-                isFlagged: {
-                  $set: false
-                }
-              }
-            }
-          });
+      if (state.board.mineField[action.coord].isMine) {
+        clone.isGameOver = true
+        state.board.mineLocations.forEach(function(mineLocation) {
+          clone.board.mineField[mineLocation].isSweeped = true
+          clone.board.mineField[mineLocation].isFlagged = false
         })
-        return state
+        return clone
       }
-      return recursivelySweepSquares(state, action.coord, []);
+      return recursivelySweepSquares(clone, action.coord, []);
     case gameActions.TOGGLE_SQUARE_FLAG:
-      return update(state, {
-        mineField: {
-          [action.coord]: {
-            isFlagged: {
-              $apply: (isFlagged) => {
-                return !isFlagged;
-              }
-            }
-          }
-        }
-      });
+      clone.board.mineField[action.coord].isFlagged = !clone.board.mineField[action.coord].isFlagged
+      return clone
     default:
       return state;
   }

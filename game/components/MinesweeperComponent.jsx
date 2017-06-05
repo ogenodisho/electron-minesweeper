@@ -14,7 +14,7 @@ class MinesweeperComponent extends React.Component {
     } else if (e.nativeEvent.which === 3) {
       this.props.toggleSquareFlag(coord) // right click
     } else {
-      console.log("Unknown click");
+      throw "Unknown click";
     }
   }
 
@@ -22,18 +22,18 @@ class MinesweeperComponent extends React.Component {
     // determine the table
     var table = [];
     var currRow = [];
-    for (var i = 0; i < this.props.game.board.numberOfRows; i++) {
-      for (var j = 0; j < this.props.game.board.numberOfCols; j++) {
+    for (var i = 0; i < this.props.board.numberOfRows; i++) {
+      for (var j = 0; j < this.props.board.numberOfCols; j++) {
         // Using 'let' solves the common problem of
         // having closures (handleClick) in for loops
         // using the latest values of the 'var' variable
         let coord = i + "_" + j;
-        var mineProximityNumber = this.props.game.mineField[coord].mineProximityNumber;
-        if (this.props.game.mineField[coord].isFlagged) {
+        var mineProximityNumber = this.props.board.mineField[coord].mineProximityNumber;
+        if (this.props.board.mineField[coord].isFlagged) {
           currRow.push(<td key={coord}><button className="fa fa-flag" onClick={(e) => this.handleClick(e, coord)} onContextMenu={(e) => this.handleClick(e, coord)} defaultChecked></button></td>);
-        } else if (this.props.game.mineField[coord].isSweeped === false) {
+        } else if (this.props.board.mineField[coord].isSweeped === false) {
           currRow.push(<td key={coord}><button onClick={(e) => this.handleClick(e, coord)} onContextMenu={(e) => this.handleClick(e, coord)}>&zwnj;</button></td>);
-        } else if (this.props.game.mineField[coord].isMine) { // TODO take this out
+        } else if (this.props.board.mineField[coord].isMine) { // TODO take this out
           currRow.push(<td key={coord}><button className="fa fa-bomb"/></td>);
         } else {
           if (mineProximityNumber === 0) {
@@ -48,7 +48,7 @@ class MinesweeperComponent extends React.Component {
     }
 
     return (
-      <div id="wrapper" class="minesweeper-table">
+      <div id="wrapper" className="minesweeper-table">
         <table>
           <tbody>
             {table}
@@ -61,7 +61,7 @@ class MinesweeperComponent extends React.Component {
 }
 
 MinesweeperComponent.propTypes = {
-  game: PropTypes.object.isRequired,
+  board: PropTypes.object.isRequired,
   statusMessage: PropTypes.string.isRequired
 }
 
