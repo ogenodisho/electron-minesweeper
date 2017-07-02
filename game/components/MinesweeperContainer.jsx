@@ -27,6 +27,7 @@ const mapStateToProps = (state) => {
 
   return {
     board: state.game.present.board,
+    isGameOver: state.game.present.isGameOver,
     statusMessage: statusMessage
   }
 }

@@ -16,7 +16,7 @@ let UndoRedoComponent = ({ canUndo, canRedo, onUndo, onRedo }) => (
 
 const mapStateToProps = (state) => {
   return {
-    canUndo: state.game.past.length > 0,
+    canUndo: state.game.past.length > 0 && !state.game.present.isGameOver,
     canRedo: state.game.future.length > 0
   }
 }

@@ -28,23 +28,27 @@ class MinesweeperComponent extends React.Component {
         // having closures (handleClick) in for loops
         // using the latest values of the 'var' variable
         let coord = i + "_" + j;
-        var mineProximityNumber = this.props.board.mineField[coord].mineProximityNumber;
+        let currCell;
+        let mineProximityNumber = (this.props.board.mineField[coord].mineProximityNumber === 0 && "&zwnj;") || this.props.board.mineField[coord].mineProximityNumber;
         if (this.props.board.mineField[coord].isFlagged) {
-          currRow.push(<td key={coord}><button className="fa fa-flag" onClick={(e) => this.handleClick(e, coord)} onContextMenu={(e) => this.handleClick(e, coord)} defaultChecked></button></td>);
-        } else if (this.props.board.mineField[coord].isSweeped === false) {
-          currRow.push(<td key={coord}><button onClick={(e) => this.handleClick(e, coord)} onContextMenu={(e) => this.handleClick(e, coord)}>&zwnj;</button></td>);
+          currCell = <button className="fa fa-flag" onClick={(e) => this.handleClick(e, coord)} onContextMenu={(e) => this.handleClick(e, coord)} defaultChecked></button>;
+        } else if (!this.props.board.mineField[coord].isSweeped) {
+          currCell = <button onClick={(e) => this.handleClick(e, coord)} onContextMenu={(e) => this.handleClick(e, coord)}>&zwnj;</button>;
         } else if (this.props.board.mineField[coord].isMine) { // TODO take this out
-          currRow.push(<td key={coord}><button className="fa fa-bomb sweeped"/></td>);
+          currCell = <button className="fa fa-bomb sweeped"></button>;
         } else {
-          if (mineProximityNumber === 0) {
-            currRow.push(<td key={coord}><button className="sweeped">&zwnj;</button></td>);
-          } else {
-            currRow.push(<td key={coord}><button className="sweeped">{mineProximityNumber}</button></td>);
-          }
+          currCell = <button className="sweeped">{mineProximityNumber}</button>;
         }
+
+        if (this.props.isGameOver) {
+          currCell.props.className = (currCell.props.className && currCell.props.className + " disabled") || "disabled";
+        }
+
+        currRow.push(<td key={coord}>{currCell}</td>);
       }
+
       table.push(<tr key={i}>{currRow}</tr>);
-      currRow = []
+      currRow = [];
     }
 
     return (
@@ -62,6 +66,7 @@ class MinesweeperComponent extends React.Component {
 
 MinesweeperComponent.propTypes = {
   board: PropTypes.object.isRequired,
+  isGameOver: PropTypes.bool.isRequired,
   statusMessage: PropTypes.string.isRequired
 }
 
